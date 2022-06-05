@@ -1,0 +1,17 @@
+{
+  "name": "tareas-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ServidorWeb.js",
+  "scripts": {
+    "start": "nodemon ./ServidorWeb.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
