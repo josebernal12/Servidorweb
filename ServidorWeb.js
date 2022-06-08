@@ -1,12 +1,15 @@
 const fs = require('fs')
+//CONFIGURACION EXPRESS
+const express = require('express')
+const app = express()
+const puerto = 8080
 
+//CLASE
 class Contenedor {
     constructor(nombredearchivos) {
         this.nombredearchivos = nombredearchivos
         fs.promises.writeFile(`./${this.nombredearchivos}`, '')
-
-
-    }
+ }
     async save(objeto) {
         let data = await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8')
         if (!data) {
@@ -24,20 +27,12 @@ class Contenedor {
 
     }
     async getByid(id) {
-        try {
-
-            let data = JSON.parse(await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8'))
-            data = data.find(product => product.id === id)
-            data ? console.log(data) : null
-        } catch {
-            console.log('entro al catch')
-        }
-
+        let data = JSON.parse(await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8'))
+        return data[id - 1]
 
     }
     async getAll() {
         try {
-
             let data = await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8')
             data = JSON.parse(data);
             return data
@@ -48,32 +43,15 @@ class Contenedor {
         }
     }
     async deleteById(id) {
-        try {
-            let data = await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8')
-            data = JSON.parse(data);
-            data = data.filter(res => res.id !== id)
-            await fs.promises.writeFile(`./${this.nombredearchivos}`, JSON.stringify(data))
 
-            console.log(data)
+        let data = JSON.parse(await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8'))
+        const indice = id - 1
+        data[indice] = null
+        await fs.promises.writeFile(`./${this.nombredearchivos}`, JSON.stringify(data))
 
-        } catch {
-            console.log('error entro al catch')
-        }
     }
-
-
-
     async deleteAll() {
-        try {
-            let data = JSON.parse(await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8'))
-            data = JSON.parse(data);
-            data = []
-            console.log(data)
-
-        } catch {
-            console.log('hubo un error entro al catch')
-        }
-
+        JSON.parse(await fs.promises.readFile(`./${this.nombredearchivos}`, '[]'))
 
     }
 }
@@ -102,19 +80,15 @@ const test = async () => {
     await productos.save(objeto2)
     await productos.save(objeto3)
     await productos.save(objeto4)
-    await productos.getByid(1)
+    await productos.getByid(3)
+
     await productos.getAll()
     await productos.deleteById(2)
     await productos.deleteAll
 }
 test()
 
-const express = require('express')
-const app = express()
-const puerto = 8080
-
-
-
+// RUTAS
 app.get('/', (req, res) => {
     res.send('trabajo entregable')
 
@@ -122,8 +96,6 @@ app.get('/', (req, res) => {
 app.get('/producto', async (req, res) => {
     const response = await productos.getAll()
     res.send(response)
-
-
 })
 
 app.get('/productoRandom', async (req, res) => {
@@ -131,23 +103,9 @@ app.get('/productoRandom', async (req, res) => {
     const response = await productos.getAll()
     const aleatorio = response[Math.floor(Math.random() * response.length)];
     res.send(aleatorio)
-
 })
 
-app.get('/Contenedor', async (req, res) => {
-   
-    const response = await productos.getByid(1)
-    res.send(response)
-   
-   
-
-
-
-})
-
-
-
-
+//  CODIGO PARA QUE EL PUERTO ESCUCHE
 
 
 app.listen(puerto, () => {
