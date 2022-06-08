@@ -9,7 +9,7 @@ class Contenedor {
     constructor(nombredearchivos) {
         this.nombredearchivos = nombredearchivos
         fs.promises.writeFile(`./${this.nombredearchivos}`, '')
- }
+    }
     async save(objeto) {
         let data = await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8')
         if (!data) {
@@ -36,8 +36,6 @@ class Contenedor {
             let data = await fs.promises.readFile(`./${this.nombredearchivos}`, 'utf-8')
             data = JSON.parse(data);
             return data
-
-
         } catch {
             console.log('error entro al catch')
         }
